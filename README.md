@@ -2,10 +2,25 @@
 JavaScript call stack controller.
 
 
+## API
+
+* callStack.wrap(fn`:Function`)`:Function`
+* callStack.wrap(ctx`:Object`, fn`:String`)`:Function`
+* callStack.wrap(ctx`:Object`, fn`:Function`)`:Function`
+* callStack.wrap(ctx`:Object`, fn`:String`, options`:Object`)`:Function`
+* callStack(name`:String`)`:Stack` — get call stack by name
+* callStack.pause()
+* callStack.unpause()
+* callStack.clear(name`:String`)
+
+
+---
+
+
 ## Use case
 ```js
 var MyView = framework.View.extend({
-	initialize: function (){
+    initialize: function (){
 		callStack('vis').wrap(this, 'visibility');
 		callStack('render').wrap(this, 'render', { uniq: 'once' });
 	},
@@ -59,24 +74,6 @@ footer.vis: false
 
 ---
 
-
-### callStack.wrap(fn/**Function*/)/**Function*/
-Wrap `fn` and add to `default` stack.
-
-
-### callStack.wrap(ctx/**Object*/, fn/**String*/)/**Function*/
-Wrap `fn` with context and add to `default` stack.
-
-
-### callStack.wrap(ctx/**Object*/, fn/**Function*/)/**Function*/
-Wrap `fn` with context and add to `default` stack.
-
-
-### callStack.wrap(ctx/**Object*/, fn/**String*/, options/**Object)/**Function*/
-Wrap `fn` with context and `options`.
-
-
----
 
 ## Options
 
