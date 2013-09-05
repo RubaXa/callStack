@@ -1,0 +1,22 @@
+{
+	"name": "callstack",
+	"version": "0.1.0",
+	"devDependencies": {
+		"grunt": "~0.4.0",
+		"grunt-contrib-jshint": "~0.2.0",
+		"grunt-contrib-qunit": "~0.2.0",
+		"grunt-contrib-uglify": "~0.1"
+	},
+	"description": "JavaScript call stack controller",
+	"main": "callStack.js",
+	"scripts": {
+		"test": "grunt"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/rubaxa/callStack.git"
+	},
+	"keywords": ["stack", "call stack", "flow controll"],
+	"author": "Konstantin Lebedev <ibnRubaXa@gmail.com>",
+	"license": "MIT"
+}
