@@ -228,6 +228,11 @@
 				calls: [],
 
 				wrap: _wrapCall,
+
+				add: function (ctx, fn, opts){
+					this.wrap(ctx, fn, opts)();
+				},
+
 				clear: function (){
 					this.calls = [];
 				}
@@ -240,6 +245,20 @@
 
 
 	/**
+	 * Wrap and add to 'default' stack
+	 *
+	 * @public
+	 * @param   {Object|Function}   ctx
+	 * @param   {Function|String}   [fn]
+	 * @param   {Object}            [opts]    Object({ uniq: false, weight: 0 })
+	 * @return  {Function}
+	 */
+	callStack.wrap = function (ctx, fn, opts){
+		return	callStack('default').wrap(ctx, fn, opts);
+	};
+
+
+	/**
 	 * Add to 'default' stack
 	 *
 	 * @public
@@ -248,9 +267,8 @@
 	 * @param   {Object}            [opts]    Object({ uniq: false, weight: 0 })
 	 * @return  {Function}
 	 */
-	callStack.wrap = function (){
-		var def = callStack('default');
-		return	def.wrap.apply(def, arguments);
+	callStack.add = function (ctx, fn, opts){
+		callStack('default').add(ctx, fn, opts);
 	};
 
 

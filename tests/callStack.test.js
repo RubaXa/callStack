@@ -27,6 +27,20 @@ test('wrap', function (){
 });
 
 
+test('add', function (){
+	var log = [];
+
+	callStack.add(function (){ log.push('bar') });
+	callStack.add(function (){ log.push('foo') }, { weight: 10 });
+
+	stop();
+	callStack.tick.one(function (){
+		start();
+		equal(log.join(','), 'foo,bar');
+	});
+});
+
+
 test('weight', function (){
 	var log = [];
 

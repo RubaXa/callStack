@@ -4,6 +4,7 @@ JavaScript call stack controller.
 
 ## API
 
+* callStack.add(ctx`:Object`, fn`:String`, options`:Object`)`
 * callStack.wrap(fn`:Function`)`:Function`
 * callStack.wrap(ctx`:Object`, fn`:String`)`:Function`
 * callStack.wrap(ctx`:Object`, fn`:Function`)`:Function`
