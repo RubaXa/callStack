@@ -25,6 +25,22 @@
 	var _tickFns = [];
 	var _mathMax = Math.max;
 
+	var _simpleSort = function (arr){
+		var n = arr.length, swap;
+		if( n > 1 ){
+			while( n-- > 1 ){
+				if( arr[n].weight > arr[n-1].weight ){
+					swap = arr[n];
+					arr[n] = arr[n-1];
+					arr[n-1] = swap;
+				}
+				else {
+					break;
+				}
+			}
+		}
+	};
+
 	var _setImmediate = (function (){
 		return (
 			   window.setImmediate
@@ -44,16 +60,6 @@
 			|| window.clearInterval
 		);
 	})();
-
-
-	/**
-	 * Sort  calls stack
-	 * @private
-	 * @returns {number}
-	 */
-	function _sortStack(a, b){
-		return	(a.weight > b.weight) ? -1 : (b.weight == a.weight ? 0 : 1);
-	}
 
 
 	/**
@@ -120,10 +126,11 @@
 	 */
 	function _walkStack(){
 		if( _pause === false ){
-			var name, stack, i, n, callee, s = 0, sn = _order.length;
+			var name, stack, i, n, callee, s = 0, sn = _order.length, ctx, fn, args;
 
 			for( ; s < sn; s++ ){
-				name	= _order[s];
+				name = _order[s];
+
 				if( _stacks[name] !== void 0 ){
 					stack = _stacks[name].calls;
 
@@ -133,8 +140,19 @@
 					_stacks[name].calls = [];
 
 					for( ; i < n; i++ ){
-						callee = stack[i];
-						callee.fn.apply(callee.ctx, callee.args);
+						callee	= stack[i];
+						ctx		= callee.ctx;
+						fn		= callee.fn;
+						args	= callee.args;
+
+						switch( args.length ){
+							case 0: fn.call(ctx); break;
+							case 1: fn.call(ctx, args[0]); break;
+							case 2: fn.call(ctx, args[0], args[1]); break;
+							case 3: fn.call(ctx, args[0], args[1], args[2]); break;
+							case 4: fn.call(ctx, args[0], args[1], args[2], args[3]); break;
+							default: fn.apply(ctx, args); break;
+						}
 					}
 				}
 			}
@@ -166,7 +184,7 @@
 			ctx		= null;
 		}
 
-
+		// Default options
 		opts = opts || {
 			uniq: false,
 			weight: 0
@@ -178,7 +196,10 @@
 
 		return function (){
 			if( !opts.uniq || _ifNotInStack(stack.calls, fn, arguments, opts.uniq) ){
-				stack.calls.push({
+				var calls = stack.calls;
+
+				// Add to call stack
+				calls.push({
 					  fn: fn
 					, ctx: ctx
 					, args: arguments
@@ -186,7 +207,8 @@
 				});
 
 				if( stack.sortable === true ){
-					stack.calls.sort(_sortStack);
+					// Sort call stack
+					_simpleSort(calls);
 				}
 
 				_walkStackTick();
@@ -324,3 +346,4 @@
 	// @export
 	return	callStack;
 });
+

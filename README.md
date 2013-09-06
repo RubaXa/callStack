@@ -9,6 +9,7 @@ JavaScript call stack controller.
 * callStack.wrap(ctx`:Object`, fn`:Function`)`:Function`
 * callStack.wrap(ctx`:Object`, fn`:String`, options`:Object`)`:Function`
 * callStack(name`:String`)`:Stack` — get call stack by name
+* callStack.order(firstName`:String`, secondName`:String`[, etc])
 * callStack.pause()
 * callStack.unpause()
 * callStack.clear(name`:String`)
