@@ -265,7 +265,6 @@
 	 * @param   {Object|Function}   ctx
 	 * @param   {Function|String}   [fn]
 	 * @param   {Object}            [opts]    Object({ uniq: false, weight: 0 })
-	 * @return  {Function}
 	 */
 	callStack.add = function (ctx, fn, opts){
 		callStack('default').add(ctx, fn, opts);
