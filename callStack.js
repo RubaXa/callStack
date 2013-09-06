@@ -57,7 +57,7 @@
 			|| window.cancelAnimationFrame
 			|| window.webkitCancelAnimationFrame
 			|| window.mozCancelAnimationFrame
-			|| window.clearInterval
+			|| window.clearTimeout
 		);
 	})();
 
@@ -362,7 +362,7 @@
 
 
 	// @export
-	callStack.version = '0.2.0';
+	callStack.version = '0.2.1';
 	return	callStack;
 });
 
