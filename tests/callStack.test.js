@@ -172,20 +172,21 @@ test('pause/unpause', function (){
 	callStack.clear();
 
 	var log = [];
-	var foo = callStack.wrap(function (){ log.push('foo'); });
+	var foo = callStack.wrap(function (x){ log.push(x); });
 
 	stop();
 	callStack.tick.one(function (){
 		start();
-		equal(log.join(','), 'foo,foo,foo');
+		equal(log.join('-'), '1-2-3');
 	});
 
-	foo();
+	foo(1);
 	callStack.pause();
-	foo();
+	foo(2);
 
 	setTimeout(function (){
 		callStack.unpause();
-		foo();
+		foo(3);
 	}, 100);
 });
+

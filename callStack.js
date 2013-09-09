@@ -129,15 +129,15 @@
 			var name, stack, i, n, callee, s = 0, sn = _order.length, ctx, fn, args;
 
 			for( ; s < sn; s++ ){
-				name = _order[s];
+				name	= _order[s];
+				stack	= _stacks[name];
 
-				if( _stacks[name] !== void 0 ){
-					stack = _stacks[name].calls;
+				if( (stack !== void 0) && (stack.paused === false) ){
+					stack = stack.calls;
+					_stacks[name].calls = [];
 
 					i = 0;
 					n = stack.length;
-
-					_stacks[name].calls = [];
 
 					for( ; i < n; i++ ){
 						callee	= stack[i];
@@ -184,15 +184,12 @@
 			ctx		= null;
 		}
 
+
 		// Default options
 		opts = opts || {
-			uniq: false,
+			uniq: false, // Enum(true, "once")
 			weight: 0
 		};
-
-		if( opts.weight !== 0 ){
-			stack.sortable = true;
-		}
 
 		return function (){
 			if( !opts.uniq || _ifNotInStack(stack.calls, fn, arguments, opts.uniq) ){
@@ -203,10 +200,10 @@
 					  fn: fn
 					, ctx: ctx
 					, args: arguments
-					, weight: opts.weight || 0
+					, weight: opts.weight|0
 				});
 
-				if( stack.sortable === true ){
+				if( opts.weight !== 0 ){
 					// Sort call stack
 					_simpleSort(calls);
 				}
@@ -226,11 +223,20 @@
 		if( _stacks[name] == void 0 ){
 			_stacks[name] = {
 				calls: [],
+				paused: false,
 
 				wrap: _wrapCall,
 
 				add: function (ctx, fn, opts){
 					this.wrap(ctx, fn, opts)();
+				},
+
+				pause: function (){
+					this.paused = true;
+				},
+
+				unpause: function (){
+					this.paused = false;
 				},
 
 				clear: function (){
