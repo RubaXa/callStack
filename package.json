@@ -1,6 +1,7 @@
 {
 	"name": "callstackjs",
-	"version": "0.2.1",
+	"exportName": "callStack",
+	"version": "0.3",
 	"devDependencies": {
 		"grunt": "~0.4.0",
 		"grunt-contrib-jshint": "~0.2.0",

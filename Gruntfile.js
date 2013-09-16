@@ -36,11 +36,11 @@ module.exports = function (grunt){
 
 		uglify: {
 			options: {
-				banner: '/*! callStack <%= pkg.version %> - <%= pkg.license %> | <%= pkg.repository.url %> */\n'
+				banner: '/*! <%= pkg.exportName %> <%= pkg.version %> - <%= pkg.license %> | <%= pkg.repository.url %> */\n'
 			},
 			dist: {
 				files: {
-					  'callStack.min.js': ['callStack.js']
+					  '<%= pkg.exportName %>.min.js': ['<%= pkg.exportName %>.js']
 				}
 			}
 		}

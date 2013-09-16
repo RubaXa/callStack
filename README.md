@@ -4,7 +4,7 @@ JavaScript call stack controller.
 
 ## API
 
-* callStack.add(ctx`:Object`, fn`:String`, options`:Object`)`
+* callStack.add(ctx`:Object`, fn`:String`, options`:Object`)
 * callStack.wrap(fn`:Function`)`:Function`
 * callStack.wrap(ctx`:Object`, fn`:String`)`:Function`
 * callStack.wrap(ctx`:Object`, fn`:Function`)`:Function`
@@ -14,7 +14,7 @@ JavaScript call stack controller.
 * callStack.pause()
 * callStack.unpause()
 * callStack.clear(name`:String`)
-
+* callStack.[override](#override)(ctx`:Object`, method`:String`, callback`:Function`)`:Function`
 
 ---
 
@@ -73,6 +73,30 @@ footer.vis: true
 footer.vis: false
 ```
 
+
+---
+
+<a name="override"></a>
+### callStack.override
+```js
+var module = {
+	name: "callStack",
+	toString: function (){
+		return this.name;
+	}
+};
+
+module.toString(); // "callStack"
+
+// Owerride `toString` method
+callStack.override(module, 'toString', function (toStringFn/**Function*/){
+	retrun function (){
+		return '['+ toStringFn.call(this) +']';
+	};
+});
+
+module.toString(); // "[callStack]"
+```
 
 ---
 

@@ -190,3 +190,29 @@ test('pause/unpause', function (){
 	}, 100);
 });
 
+
+
+test('override', function (){
+	var log = [];
+	var foo = function (a){ log.push(a) };
+	var obj = { bar: function (a){ log.push(a) } };
+
+	var ofoo = callStack.override(foo, function (fn){
+		return function (a){
+			fn(a+1);
+		};
+	});
+
+	callStack.override(obj, 'bar', function (fn){
+		return function (a){
+			fn(a*2);
+		};
+	});
+
+	// test
+	foo(1);
+	ofoo(1);
+	obj.bar(2);
+
+	equal(log.join('->'), '1->2->4');
+});

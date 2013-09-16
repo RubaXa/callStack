@@ -366,8 +366,29 @@
 	};
 
 
+	/**
+	 * Override method
+	 * @public
+	 * @param    {Object|Function} ctx
+	 * @param    {String|Function} fn
+	 * @param    {Function}  callback
+	 * @returns  {Function}
+	 */
+	callStack.override = function (ctx, fn, callback){
+		if( typeof fn === 'string' ){
+			return ctx[fn] = callStack.override(ctx, ctx[fn], callback);
+		}
+		else if( callback === void 0 ){
+			callback = fn;
+			fn = ctx;
+		}
+
+		return callback(fn);
+	};
+
+
 	// @export
-	callStack.version = '0.2.1';
+	callStack.version = '0.3';
 	return	callStack;
 });
 
