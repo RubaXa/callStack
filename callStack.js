@@ -1,5 +1,3 @@
-"use strict";
-
 /**!
  * Call stack controller
  * @author	RubaXa	<ibnRubaXa@gmail.com>
@@ -8,17 +6,21 @@
 
 /*global define, module, window*/
 (function (factory){
-  if( typeof define === "function" && define.amd ){
-    define("callStack", [], factory);
-  }
-  else if( typeof module != "undefined" && typeof module.exports != "undefined" ){
-    module.exports = factory();
-  }
-  else {
-    window["callStack"] = factory();
-  }
+	"use strict";
+
+	if( typeof define === "function" && define.amd ){
+		define("callStack", [], factory);
+	}
+	else if( typeof module != "undefined" && typeof module.exports != "undefined" ){
+		module.exports = factory();
+	}
+	else {
+		window["callStack"] = factory();
+	}
 })(function (){
-	var _pid;
+	"use strict";
+
+	var _pid; // immediate id
 	var _order = ['default'];
 	var _pause = false;
 	var _stacks = {};
@@ -115,8 +117,10 @@
 	 * @private
 	 */
 	function _walkStackTick(){
-		_clearImmediate(_pid);
-		_pid = _setImmediate(_walkStack);
+		if( _pid === void 0 || callStack.debounce === true ){
+			_clearImmediate(_pid);
+			_pid = _setImmediate(_walkStack);
+		}
 	}
 
 
@@ -125,6 +129,8 @@
 	 * @private
 	 */
 	function _walkStack(){
+		_pid = void 0;
+
 		if( _pause === false ){
 			var name, stack, i, n, callee, s = 0, sn = _order.length, ctx, fn, args;
 
@@ -387,8 +393,15 @@
 	};
 
 
+	/**
+	 * Debounce flag
+	 * @type {Boolean}
+	 */
+	callStack.debounce = false;
+
+
 	// @export
-	callStack.version = '0.3.0';
+	callStack.version = '0.4.0';
 	return	callStack;
 });
 

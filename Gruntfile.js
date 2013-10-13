@@ -30,6 +30,10 @@ module.exports = function (grunt){
 			}
 		},
 
+		version: {
+			src: '<%= pkg.exportName %>.js'
+		},
+
 		qunit: {
 			files: ['tests/**/*.html']
 		},
@@ -48,6 +52,7 @@ module.exports = function (grunt){
 
 
 	// These plugins provide necessary tasks.
+	grunt.loadNpmTasks('grunt-version');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -58,5 +63,5 @@ module.exports = function (grunt){
 
 
 	// Default task.
-	grunt.registerTask('default', ['test', 'uglify']);
+	grunt.registerTask('default', ['version', 'test', 'uglify']);
 };

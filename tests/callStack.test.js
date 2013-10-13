@@ -216,3 +216,34 @@ test('override', function (){
 
 	equal(log.join('->'), '1->2->4');
 });
+
+/*
+test('batch', function (){
+	var log = [], state = [];
+
+	callStack('foo').add(function (){ log.push(4); });
+
+	callStack.add(function (){ log.push(2); });
+	callStack.add(function (){ log.push(1); }, { weight: 100 });
+
+	callStack('foo').add(function (){ log.push(3); });
+
+
+	// @test
+	stop();
+	callStack.on('default', function (){
+		state.push(2);
+		equal(log.join('->'), '1->2->4->3');
+	});
+
+	callStack.on('default', function (){
+		state.push(1);
+		equal(log.join('->'), '1->2');
+	});
+
+	callStack.tick.one(function (){
+		start();
+		equal(state.join('->'), '1->2');
+	});
+});
+*/
