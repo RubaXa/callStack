@@ -217,6 +217,29 @@ test('override', function (){
 	equal(log.join('->'), '1->2->4');
 });
 
+
+test('disabled', function (){
+	callStack.disabled = true;
+
+	var log = [];
+	var obj = {
+		baz: function (a, b, c){
+			log.push('baz'+(a + b + c));
+		}
+	};
+
+	var bar = callStack.wrap(function (){ log.push('bar'); });
+	var baz = callStack('bbb').wrap(obj, 'baz');
+
+	callStack('aaa').add(function (){ log.push('foo'); });
+	bar();
+	obj.baz(1, 2, 3);
+
+	equal(log.join('->'), 'foo->bar->baz6');
+	callStack.disabled = false;
+});
+
+
 /*
 test('batch', function (){
 	var log = [], state = [];

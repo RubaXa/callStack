@@ -197,6 +197,11 @@
 			weight: 0
 		};
 
+
+		if( callStack.disabled ){
+			return	fn;
+		}
+
 		return function (){
 			if( !opts.uniq || _ifNotInStack(stack.calls, fn, arguments, opts.uniq) ){
 				var calls = stack.calls;
