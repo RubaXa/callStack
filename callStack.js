@@ -389,7 +389,7 @@
 
 
 	// @export
-	callStack.version = '0.4.0';
+	callStack.version = '0.4.1';
 	return	callStack;
 });
 
