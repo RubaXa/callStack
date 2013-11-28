@@ -43,25 +43,8 @@
 		}
 	};
 
-	var _setImmediate = (function (){
-		return (
-			   window.setImmediate
-			|| window.requestAnimationFrame
-			|| window.webkitRequestAnimationFrame
-			|| window.mozRequestAnimationFrame
-			|| function (fn){ window.setTimeout(fn, 0); }
-		);
-	})();
-
-	var _clearImmediate = (function (){
-		return (
-			   window.clearImmediate
-			|| window.cancelAnimationFrame
-			|| window.webkitCancelAnimationFrame
-			|| window.mozCancelAnimationFrame
-			|| window.clearTimeout
-		);
-	})();
+	var _setImmediate = window.setImmediate || function (fn){ window.setTimeout(fn, 0); };
+	var _clearImmediate = window.clearImmediate || window.clearTimeout;
 
 
 	/**
