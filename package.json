@@ -1,13 +1,13 @@
 {
 	"name": "callstackjs",
 	"exportName": "callStack",
-	"version": "0.4.1",
+	"version": "0.5.0",
 	"devDependencies": {
-		"grunt": "~0.4.0",
+		"grunt": "~0.4.5",
 		"grunt-version": "*",
 		"grunt-contrib-jshint": "~0.2.0",
-		"grunt-contrib-qunit": "~0.2.0",
-		"grunt-contrib-uglify": "~0.1"
+		"grunt-contrib-qunit": "~0.5.1",
+		"grunt-contrib-uglify": "~0.5.0"
 	},
 	"description": "JavaScript call stack controller",
 	"main": "callStack.js",

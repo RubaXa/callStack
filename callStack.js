@@ -8,8 +8,8 @@
 (function (factory){
 	"use strict";
 
-	if( typeof define === "function" && define.amd ){
-		define("callStack", [], factory);
+	if( typeof define === "function" && (define.amd || define.ajs) ){
+		define([], function (){ return factory(); });
 	}
 	else if( typeof module != "undefined" && typeof module.exports != "undefined" ){
 		module.exports = factory();
@@ -388,8 +388,8 @@
 	callStack.debounce = false;
 
 
-	// @export
-	callStack.version = '0.4.1';
+	// Export
+	callStack.version = '0.5.0';
 	return	callStack;
 });
 
