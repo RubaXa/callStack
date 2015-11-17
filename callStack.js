@@ -1,23 +1,25 @@
 /**!
  * Call stack controller
- * @author	RubaXa	<ibnRubaXa@gmail.com>
+ * @author RubaXa <ibnRubaXa@gmail.com>
  */
 
 
 /*global define, module, window*/
-(function (factory){
+(function (factory) {
 	"use strict";
 
-	if( typeof define === "function" && (define.amd || define.ajs) ){
-		define([], function (){ return factory(); });
+	if (typeof define === "function" && define.amd) {
+		define([], function () {
+			return factory();
+		});
 	}
-	else if( typeof module != "undefined" && typeof module.exports != "undefined" ){
+	else if (typeof module != "undefined" && typeof module.exports != "undefined") {
 		module.exports = factory();
 	}
 	else {
 		window["callStack"] = factory();
 	}
-})(function (){
+})(function () {
 	"use strict";
 
 	var _pid; // immediate id
@@ -27,14 +29,15 @@
 	var _tickFns = [];
 	var _mathMax = Math.max;
 
-	var _simpleSort = function (arr){
+	var _simpleSort = function (arr) {
 		var n = arr.length, swap;
-		if( n > 1 ){
-			while( n-- > 1 ){
-				if( arr[n].weight > arr[n-1].weight ){
+
+		if (n > 1) {
+			while (n-- > 1) {
+				if (arr[n].weight > arr[n - 1].weight) {
 					swap = arr[n];
-					arr[n] = arr[n-1];
-					arr[n-1] = swap;
+					arr[n] = arr[n - 1];
+					arr[n - 1] = swap;
 				}
 				else {
 					break;
@@ -43,7 +46,10 @@
 		}
 	};
 
-	var _setImmediate = window.setImmediate || function (fn){ window.setTimeout(fn, 0); };
+	var _setImmediate = window.setImmediate || function (fn) {
+		window.setTimeout(fn, 0);
+	};
+
 	var _clearImmediate = window.clearImmediate || window.clearTimeout;
 
 
@@ -52,23 +58,24 @@
 	 * @private
 	 * @returns {boolean}
 	 */
-	function _ifNotInStack(stack, fn, args, uniq){
+	function _ifNotInStack(stack, fn, args, uniq) {
 		var i = stack.length, callee;
 
-		while( i-- ){
+		while (i--) {
 			callee = stack[i];
-			if( callee.fn === fn ){
-				if( uniq === 'once' ){
+
+			if (callee.fn === fn) {
+				if (uniq === 'once') {
 					stack.splice(i, 1);
-					return	true;
+					return true;
 				}
 				else {
-					return	_argsNotEqual(callee.args, args);
+					return _argsNotEqual(callee.args, args);
 				}
 			}
 		}
 
-		return	true;
+		return true;
 	}
 
 
@@ -77,20 +84,20 @@
 	 * @private
 	 * @returns {boolean}
 	 */
-	function _argsNotEqual(left, right){
-		if( left.length !== right.length ){
-			return	true;
+	function _argsNotEqual(left, right) {
+		if (left.length !== right.length) {
+			return true;
 		}
 		else {
 			var i = _mathMax(left.length, right.length);
 
-			while( i-- ){
-				if( left[i] !== right[i] ){
-					return	true;
+			while (i--) {
+				if (left[i] !== right[i]) {
+					return true;
 				}
 			}
 
-			return	false;
+			return false;
 		}
 	}
 
@@ -99,8 +106,8 @@
 	 * Debounce walk
 	 * @private
 	 */
-	function _walkStackTick(){
-		if( _pid === void 0 || callStack.debounce === true ){
+	function _walkStackTick() {
+		if (_pid === void 0 || callStack.debounce === true) {
 			_clearImmediate(_pid);
 			_pid = _setImmediate(_walkStack);
 		}
@@ -111,48 +118,73 @@
 	 * Walking through the stack and execution of pending calls.
 	 * @private
 	 */
-	function _walkStack(){
+	function _walkStack() {
 		_pid = void 0;
 
-		if( _pause === false ){
-			var name, stack, i, n, callee, s = 0, sn = _order.length, ctx, fn, args;
+		if (_pause === false) {
+			var name,
+				stack,
+				i,
+				n,
+				callee,
+				s = 0,
+				sn = _order.length,
+				ctx,
+				fn,
+				args;
 
-			for( ; s < sn; s++ ){
-				name	= _order[s];
-				stack	= _stacks[name];
+			for (; s < sn; s++) {
+				name = _order[s];
+				stack = _stacks[name];
 
-				if( (stack !== void 0) && (stack.paused === false) ){
+				if ((stack !== void 0) && (stack.paused === false)) {
 					stack = stack.calls;
 					_stacks[name].calls = [];
 
 					i = 0;
 					n = stack.length;
 
-					for( ; i < n; i++ ){
-						callee	= stack[i];
-						ctx		= callee.ctx;
-						fn		= callee.fn;
-						args	= callee.args;
+					for (; i < n; i++) {
+						callee = stack[i];
+						ctx = callee.ctx;
+						fn = callee.fn;
+						args = callee.args;
 
-						switch( args.length ){
-							case 0: fn.call(ctx); break;
-							case 1: fn.call(ctx, args[0]); break;
-							case 2: fn.call(ctx, args[0], args[1]); break;
-							case 3: fn.call(ctx, args[0], args[1], args[2]); break;
-							case 4: fn.call(ctx, args[0], args[1], args[2], args[3]); break;
-							default: fn.apply(ctx, args); break;
+						switch (args.length) {
+							case 0:
+								fn.call(ctx);
+								break;
+
+							case 1:
+								fn.call(ctx, args[0]);
+								break;
+
+							case 2:
+								fn.call(ctx, args[0], args[1]);
+								break;
+
+							case 3:
+								fn.call(ctx, args[0], args[1], args[2]);
+								break;
+
+							case 4:
+								fn.call(ctx, args[0], args[1], args[2], args[3]);
+								break;
+
+							default:
+								fn.apply(ctx, args);
+								break;
 						}
 					}
 				}
 			}
 
 			i = _tickFns.length;
-			while( i-- ){
+			while (i--) {
 				_tickFns[i]();
 			}
 		}
 	}
-
 
 
 	/**
@@ -160,17 +192,17 @@
 	 * @private
 	 * @returns {Function}
 	 */
-	function _wrapCall(ctx, fn, opts){
-		 /*jshint validthis:true*/
+	function _wrapCall(ctx, fn, opts) {
+		/*jshint validthis:true*/
 		var stack = this;
 
-		if( typeof fn === 'string' ){
+		if (typeof fn === 'string') {
 			return ctx[fn] = this.wrap(ctx, ctx[fn], opts);
 		}
-		else if( (fn === void 0) || !(fn instanceof Function) ){
-			opts	= fn;
-			fn		= ctx;
-			ctx		= null;
+		else if ((fn === void 0) || !(fn instanceof Function)) {
+			opts = fn;
+			fn = ctx;
+			ctx = null;
 		}
 
 
@@ -181,23 +213,23 @@
 		};
 
 
-		if( callStack.disabled ){
-			return	fn;
+		if (callStack.disabled) {
+			return fn;
 		}
 
-		return function (){
-			if( !opts.uniq || _ifNotInStack(stack.calls, fn, arguments, opts.uniq) ){
+		return function callStackWrapper() {
+			if (!opts.uniq || _ifNotInStack(stack.calls, fn, arguments, opts.uniq)) {
 				var calls = stack.calls;
 
 				// Add to call stack
 				calls.push({
-					  fn: fn
-					, ctx: ctx
-					, args: arguments
-					, weight: opts.weight|0
+					fn: fn,
+					ctx: ctx,
+					args: arguments,
+					weight: opts.weight | 0
 				});
 
-				if( opts.weight !== 0 ){
+				if (opts.weight !== 0) {
 					// Sort call stack
 					_simpleSort(calls);
 				}
@@ -213,34 +245,34 @@
 	 * @param   {String}  name
 	 * @returns {Object}
 	 */
-	function callStack(name){
-		if( _stacks[name] == void 0 ){
+	function callStack(name) {
+		if (_stacks[name] == void 0) {
 			_stacks[name] = {
 				calls: [],
 				paused: false,
 
 				wrap: _wrapCall,
 
-				add: function (ctx, fn, opts){
+				add: function (ctx, fn, opts) {
 					this.wrap(ctx, fn, opts)();
 				},
 
-				pause: function (){
+				pause: function () {
 					this.paused = true;
 				},
 
-				unpause: function (){
+				unpause: function () {
 					this.paused = false;
 				},
 
-				clear: function (){
+				clear: function () {
 					this.calls = [];
 				}
 			};
 			_order.push(name);
 		}
 
-		return	_stacks[name];
+		return _stacks[name];
 	}
 
 
@@ -253,8 +285,8 @@
 	 * @param   {Object}            [opts]    Object({ uniq: false, weight: 0 })
 	 * @return  {Function}
 	 */
-	callStack.wrap = function (ctx, fn, opts){
-		return	callStack('default').wrap(ctx, fn, opts);
+	callStack.wrap = function (ctx, fn, opts) {
+		return callStack('default').wrap(ctx, fn, opts);
 	};
 
 
@@ -266,7 +298,7 @@
 	 * @param   {Function|String}   [fn]
 	 * @param   {Object}            [opts]    Object({ uniq: false, weight: 0 })
 	 */
-	callStack.add = function (ctx, fn, opts){
+	callStack.add = function (ctx, fn, opts) {
 		callStack('default').add(ctx, fn, opts);
 	};
 
@@ -277,7 +309,7 @@
 	 * @public
 	 * @param   {Function}  fn
 	 */
-	callStack.tick = function (fn){
+	callStack.tick = function (fn) {
 		_tickFns.push(fn);
 	};
 
@@ -288,10 +320,11 @@
 	 * @public
 	 * @param   {Function}  fn
 	 */
-	callStack.untick = function (fn){
+	callStack.untick = function (fn) {
 		var i = _tickFns.length;
-		while( i-- ){
-			if( _tickFns[i] === fn ){
+
+		while (i--) {
+			if (_tickFns[i] === fn) {
 				_tickFns.splice(i, 1);
 				break;
 			}
@@ -305,24 +338,29 @@
 	 * @public
 	 * @param   {Function}  fn
 	 */
-	callStack.tick.one = function (fn){
-		callStack.tick(function _(){
-			callStack.untick(_);
+	callStack.tick.one = function (fn) {
+		var wrapper = function () {
+			callStack.untick(wrapper);
 			fn();
-		});
+		};
+
+		callStack.tick(wrapper);
 	};
 
 
 	/**
 	 * Order flows
 	 */
-	callStack.order = function (){
-		var args = arguments, i = args.length, j;
+	callStack.order = function () {
+		var args = arguments,
+			i = args.length,
+			j;
 
-		while( i-- ){
+		while (i--) {
 			j = _order.length;
-			while( j-- ){
-				if( _order[j] === args[i] ){
+
+			while (j--) {
+				if (_order[j] === args[i]) {
 					_order.splice(j, 1);
 					break;
 				}
@@ -337,7 +375,7 @@
 	 * Pause stack
 	 * @public
 	 */
-	callStack.pause = function (){
+	callStack.pause = function () {
 		_pause = true;
 	};
 
@@ -346,7 +384,7 @@
 	 * Unpause stack
 	 * @public
 	 */
-	callStack.unpause = function (){
+	callStack.unpause = function () {
 		_pause = false;
 		_walkStackTick();
 	};
@@ -355,7 +393,7 @@
 	/**
 	 * Clear call stack
 	 */
-	callStack.clear = function (name){
+	callStack.clear = function (name) {
 		callStack(name || 'default').clear();
 	};
 
@@ -368,11 +406,11 @@
 	 * @param    {Function}  callback
 	 * @returns  {Function}
 	 */
-	callStack.override = function (ctx, fn, callback){
-		if( typeof fn === 'string' ){
+	callStack.override = function (ctx, fn, callback) {
+		if (typeof fn === 'string') {
 			return ctx[fn] = callStack.override(ctx, ctx[fn], callback);
 		}
-		else if( callback === void 0 ){
+		else if (callback === void 0) {
 			callback = fn;
 			fn = ctx;
 		}
@@ -390,6 +428,5 @@
 
 	// Export
 	callStack.version = '0.5.0';
-	return	callStack;
+	return callStack;
 });
-
