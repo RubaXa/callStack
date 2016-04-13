@@ -444,6 +444,6 @@
 
 
 	// Export
-	callStack.version = '0.5.0';
+	callStack.version = '1.0.0-rc';
 	return callStack;
 });
