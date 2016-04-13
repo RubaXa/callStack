@@ -214,18 +214,35 @@
 
 
 		if (callStack.disabled) {
-			return fn;
+			return function callStackDisabledWrapper() {
+				return fn.apply(ctx, arguments);
+			};
 		}
 
 		return function callStackWrapper() {
-			if (!opts.uniq || _ifNotInStack(stack.calls, fn, arguments, opts.uniq)) {
+			var length = arguments.length
+			var args = new Array(length);
+
+			if (length > 0) {
+				if (length <= 2) {
+					args[0] = arguments[0];
+					(length === 2) && (args[1] = arguments[1]);
+				} else {
+					for (var i = 0; i < length; i++) {
+						args[i] = arguments[i];
+					}
+				}
+			}
+
+
+			if (!opts.uniq || _ifNotInStack(stack.calls, fn, args, opts.uniq)) {
 				var calls = stack.calls;
 
 				// Add to call stack
 				calls.push({
 					fn: fn,
 					ctx: ctx,
-					args: arguments,
+					args: args,
 					weight: opts.weight | 0
 				});
 
