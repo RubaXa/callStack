@@ -89,8 +89,8 @@ var module = {
 module.toString(); // "callStack"
 
 // Owerride `toString` method
-callStack.override(module, 'toString', function (toStringFn/**Function*/){
-	retrun function (){
+callStack.override(module, 'toString', function (toStringFn/*Function*/){
+	return function (){
 		return '['+ toStringFn.call(this) +']';
 	};
 });
@@ -103,7 +103,7 @@ module.toString(); // "[callStack]"
 
 ## Options
 
-### Option:wieght (default = 0)
+### Option:weight (default = 0)
 ```js
 var foo = callStack.wrap(function (){ console.log("foo:", arguments) }, { weight: 100 });
 var bar = callStack.wrap(function (){ console.log("bar:", arguments) }, { weight: 10 });
