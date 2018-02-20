@@ -1,6 +1,6 @@
-module('callStack');
+QUnit.module('callStack');
 
-test('wrap', function (){
+QUnit.test('wrap', function (assert) {
 	var log = [];
 	var obj = {
 		_bar: 'bar',
@@ -14,11 +14,12 @@ test('wrap', function (){
 	var bar = callStack.wrap(obj, obj.bar);
 	callStack.wrap(obj, 'baz');
 
-	stop();
-	callStack.tick.one(function (){
-		equal(log.join(','), 'foo,bar,baz');
+	var done = assert.async();
 
-		start();
+	callStack.tick.one(function (){
+		assert.equal(log.join(','), 'foo,bar,baz');
+
+		done();
 	});
 
 	foo();
@@ -27,21 +28,21 @@ test('wrap', function (){
 });
 
 
-test('add', function (){
+QUnit.test('add', function (assert) {
 	var log = [];
 
 	callStack.add(function (){ log.push('bar') });
 	callStack.add(function (){ log.push('foo') }, { weight: 10 });
 
-	stop();
+	var done = assert.async();
 	callStack.tick.one(function (){
-		start();
-		equal(log.join(','), 'foo,bar');
+		assert.equal(log.join(','), 'foo,bar');
+		done();
 	});
 });
 
 
-test('weight', function (){
+QUnit.test('weight', function (assert) {
 	var log = [];
 
 	var foo = callStack.wrap(function (){
@@ -54,11 +55,12 @@ test('weight', function (){
 	});
 
 
-	stop();
-	callStack.tick.one(function (){
-		equal(log.join(','), 'foo,foo,bar,bar,bar');
+	var done = assert.async();
 
-		start();
+	callStack.tick.one(function (){
+		assert.equal(log.join(','), 'foo,foo,bar,bar,bar');
+
+		done();
 	});
 
 
@@ -71,7 +73,7 @@ test('weight', function (){
 
 
 
-test('uniq', function (){
+QUnit.test('uniq', function (assert) {
 	var log = [];
 
 	var foo = callStack.wrap(function (){
@@ -89,10 +91,11 @@ test('uniq', function (){
 	}, { weight: 600, uniq: 'once' });
 
 
-	stop();
+	var done = assert.async();
+
 	callStack.tick.one(function (){
-		equal(log.join(','), 'baz:BAZ,bar,bar,foo:true,foo:false,foo:false:true,foo:2');
-		start();
+		assert.equal(log.join(','), 'baz:BAZ,bar,bar,foo:true,foo:false,foo:false:true,foo:2');
+		done();
 	});
 
 
@@ -116,7 +119,7 @@ test('uniq', function (){
 
 
 
-test('flows', function (){
+QUnit.test('flows', function (assert) {
 	var log = [];
 
 	var baz = callStack('yyy').wrap(function (){ log.push('baz') });
@@ -129,10 +132,10 @@ test('flows', function (){
 	callStack.order('xxx', 'yyy');
 
 
-	stop();
+	var done = assert.async();
+
 	callStack.tick.one(function (){
-		start();
-		equal(log.join(','), 'foo,bar,bar,foo,qux,qux,baz');
+		assert.equal(log.join(','), 'foo,bar,bar,foo,qux,qux,baz');
 
 		log.splice(0, 1e5);
 		callStack.order('yyy', 'xxx');
@@ -145,10 +148,9 @@ test('flows', function (){
 		baz();
 		qux();
 
-		stop();
 		callStack.tick.one(function (){
-			start();
-			equal(log.join(','), 'qux,baz,bar,foo');
+			assert.equal(log.join(','), 'qux,baz,bar,foo');
+			done();
 		});
 	});
 
@@ -168,16 +170,16 @@ test('flows', function (){
 
 
 
-test('pause/unpause', function (){
+QUnit.test('pause/unpause', function (assert) {
 	callStack.clear();
 
 	var log = [];
 	var foo = callStack.wrap(function (x){ log.push(x); });
 
-	stop();
+	var done = assert.async();
 	callStack.tick.one(function (){
-		start();
-		equal(log.join('-'), '1-2-3');
+		assert.equal(log.join('-'), '1-2-3');
+		done();
 	});
 
 	foo(1);
@@ -192,7 +194,7 @@ test('pause/unpause', function (){
 
 
 
-test('override', function (){
+QUnit.test('override', function (assert) {
 	var log = [];
 	var foo = function (a){ log.push(a) };
 	var obj = { bar: function (a){ log.push(a) } };
@@ -214,11 +216,11 @@ test('override', function (){
 	ofoo(1);
 	obj.bar(2);
 
-	equal(log.join('->'), '1->2->4');
+	assert.equal(log.join('->'), '1->2->4');
 });
 
 
-test('disabled', function (){
+QUnit.test('disabled', function (assert) {
 	callStack.disabled = true;
 
 	var log = [];
@@ -235,7 +237,7 @@ test('disabled', function (){
 	bar();
 	obj.baz(1, 2, 3);
 
-	equal(log.join('->'), 'foo->bar->baz6');
+	assert.equal(log.join('->'), 'foo->bar->baz6');
 	callStack.disabled = false;
 });
 
@@ -256,17 +258,17 @@ test('batch', function (){
 	stop();
 	callStack.on('default', function (){
 		state.push(2);
-		equal(log.join('->'), '1->2->4->3');
+		assert.equal(log.join('->'), '1->2->4->3');
 	});
 
 	callStack.on('default', function (){
 		state.push(1);
-		equal(log.join('->'), '1->2');
+		assert.equal(log.join('->'), '1->2');
 	});
 
 	callStack.tick.one(function (){
 		start();
-		equal(state.join('->'), '1->2');
+		assert.equal(state.join('->'), '1->2');
 	});
 });
 */

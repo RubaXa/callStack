@@ -220,7 +220,7 @@
 		}
 
 		return function callStackWrapper() {
-			var length = arguments.length
+			var length = arguments.length;
 			var args = new Array(length);
 
 			if (length > 0) {
@@ -444,6 +444,6 @@
 
 
 	// Export
-	callStack.version = '1.0.0-rc';
+	callStack.version = '1.0.1';
 	return callStack;
 });
