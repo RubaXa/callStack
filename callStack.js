@@ -47,7 +47,7 @@
 	};
 
 	var _setImmediate = window.setImmediate || function (fn) {
-		window.setTimeout(fn, 0);
+		return window.setTimeout(fn, 0);
 	};
 
 	var _clearImmediate = window.clearImmediate || window.clearTimeout;
